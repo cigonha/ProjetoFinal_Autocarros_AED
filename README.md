@@ -36,20 +36,27 @@ Utilizado para **organizar as paragens por ordem alfabética** (nome).
 ## 🏗️ Estrutura do Projeto
  
 ```
-src/
-├── models/          # Entidades do sistema
-│   ├── Passageiro.java
-│   ├── Paragem.java
-│   └── Autocarro.java
+ProjetoFinal_Autocarros_AED/
+├── src/
+│   ├── app/
+│   │   └── Main.java              ← menu interativo + simulação
+│   │
+│   ├── models/
+│   │   ├── Autocarro.java
+│   │   ├── Paragem.java
+│   │   └── Passageiro.java
+│   │
+│   ├── sorting/
+│   │   ├── BubbleSort.java
+│   │   └── SelectionSort.java
+│   │
+│   └── structures/
+│       ├── MyArrayList.java       ← passageiros no autocarro
+│       ├── MyGraph.java           ← rede de paragens (grafo)
+│       ├── MyLinkedList.java      ← representa a linha (percurso)
+│       └── MyQueue.java           ← fila de passageiros por paragem
 │
-├── structures/      # Implementações manuais das estruturas de dados
-│   ├── MyQueue.java
-│   ├── MyLinkedList.java
-│   ├── MyArrayList.java
-│   └── MyGraph.java
-│
-└── app/             # Lógica principal e menu interativo
-    └── Main.java
+└── README.md
 ```
  
 ---
