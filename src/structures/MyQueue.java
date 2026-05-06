@@ -4,8 +4,8 @@ import models.Passageiro;
 
 public class MyQueue {
 
-    // Nó específico para a fila de passageiros
-    class Node {
+    private static class Node {
+
         Passageiro passageiro;
         Node next;
 
@@ -15,63 +15,106 @@ public class MyQueue {
         }
     }
 
-    private Node front; // O primeiro da fila (quem sai)
-    private Node rear;  // O último da fila (quem entra)
-    private int size;
+    private Node front; // Início da fila - quem sai primeiro
+    private Node rear;  // Fim da fila - onde entram os novos
+    private int size;   // Tamanho da fila
 
+    // Construtor
     public MyQueue() {
         front = null;
         rear = null;
         size = 0;
     }
 
-    // Adicionar passageiro à fila (entra no fim da fila)
-    public void enqueue(Passageiro passageiro) {
-        Node newNode = new Node(passageiro);
+    // Verificar se a fila está vazia
+    public boolean isEmpty() {
+        return size == 0;
+    }
 
-        if (rear == null) { // Se a fila está vazia
+    // Adicionar um passageiro à fila (vai entrar no final (rear))
+    public void enqueue(Passageiro passageiro) {
+        if (passageiro == null) {
+            System.out.println("Erro: não é possivel adicionar um passageiro nulo à fila.");
+            return;
+        }
+
+        Node newNode = new Node(passageiro);
+        if (rear == null) {
+            // Se a fila estiver vazia, o front e rear apontam ambos para o único nó
             front = newNode;
             rear = newNode;
         } else {
-            rear.next = newNode; 
-            rear = newNode;      
+            rear.next = newNode;
+            rear = newNode;
         }
         size++;
     }
 
-    // Remover passageiro da fila (sai o que está na frente)
+    // Remover um passageiro da fila (quem está no início (front))
     public Passageiro dequeue() {
-        if (front == null) {
-            return null; // Fila vazia
+        if (isEmpty()) {
+            System.out.println("Aviso: A fila está vazia. Não há passageiro para remover.");
+            return null;
         }
 
         Passageiro p = front.passageiro;
-        front = front.next; 
+        front = front.next;
 
         if (front == null) {
+            // A fila ficou vazia após a remoção, então rear também deve ser null
             rear = null;
         }
-
         size--;
-        return p;
+        return p; // Retorna o passageiro removido
     }
 
+    // Consultar o passageiro no início da fila sem o remover
+    public Passageiro peek() {
+        if (isEmpty()) {
+            return null;
+        }
+        return front.passageiro;
+    }
+
+    // Consultar quantos passageiros estão na fila
     public int size() {
         return size;
     }
 
-    // Consultar quais os passageiros na fila
+    // Imprime todos os passageiros na fila
     public void printFila() {
-        Node current = front;
-        if (current == null) {
-            System.out.println("Nenhum passageiro na fila.");
+        if (isEmpty()) {
+            System.out.println("A fila está vazia.");
             return;
         }
-        
+
+        Node current = front;
+        System.out.print("Fila: ");
         while (current != null) {
-            System.out.print(current.passageiro.getNome() + " -> ");
+            System.out.print(current.passageiro.getNome() + ", ");
+            if (current.next != null) {
+                System.out.print("-> ");
+            }
             current = current.next;
         }
-        System.out.println("Fim da fila");
+        System.out.println("[Fim da fila]");
+    }
+
+    @Override
+    public String toString() {
+        if (isEmpty()) {
+            return "Fila vazia.";
+        }
+
+        StringBuilder sb = new StringBuilder("Fila: ");
+        Node current = front;
+        while (current != null) {
+            sb.append(current.passageiro.getNome());
+            if (current.next != null) {
+                sb.append(" -> ");
+            }
+            current = current.next;
+        }
+        return sb.toString();
     }
 }

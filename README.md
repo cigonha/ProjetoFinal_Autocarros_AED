@@ -52,7 +52,7 @@ ProjetoFinal_Autocarros_AED/
 │   │
 │   └── structures/
 │       ├── MyArrayList.java       ← passageiros no autocarro
-│       ├── MyGraph.java           ← rede de paragens (grafo)
+│       ├── MyGraph.java           ← rede de paragens + minutos (grafo)
 │       ├── MyLinkedList.java      ← representa a linha (percurso)
 │       └── MyQueue.java           ← fila de passageiros por paragem
 │
