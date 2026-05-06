@@ -2,11 +2,12 @@ package models;
 
 import structures.MyQueue;
 
+// Representa uma paragem da linha de autocarro, funcionando como um nó numa lista ligada.
 public class Paragem {
 
     private String nome;
     private MyQueue filaPassageiros;
-    private Paragem next;
+    private Paragem next; // Próxima paragem na linha (ponteiro da lista ligada)
 
     // Construtor
     public Paragem(String nome) {
