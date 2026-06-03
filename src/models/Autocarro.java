@@ -3,7 +3,7 @@ package models;
 import structures.MyArrayList;
 
 public class Autocarro {
-    // PERGUNTAR SE POSSO COLOCAR AQUI O FINAL ??????
+
     private final MyArrayList passageirosNoAutocarro;
     private final int capacidadeMaxima;
 
@@ -33,6 +33,13 @@ public class Autocarro {
     }
 
     // Método para embarcar um passageiro no autocarro (se não estiver cheio)
+    /**
+     * Embarca um passageiro no autocarro. Adiciona o passageiro ao MyArrayList
+     * se houver lugar disponível.
+     *
+     * @param p Passageiro a embarcar
+     * @return true se embarcou com sucesso, false se o autocarro estiver cheio
+     */
     public boolean embarcarPassageiro(Passageiro passageiro) {
         if (estaCheio()) {
             System.out.println("Autocarro cheio! " + passageiro.getNome() + " não pode embarcar.");
@@ -40,29 +47,38 @@ public class Autocarro {
         }
 
         passageirosNoAutocarro.add(passageiro);
-        System.out.println(passageiro.getNome() + " embarcou. (Destino: " + passageiro.getDestino() + ")");
+        System.out.println(passageiro.getNome() + " embarcou no autocarro.");
         return true;
     }
 
-    // Método para desembarcar apenas os passageiros cujo destino coincide com a paragem atual 
+    // Método para desembarcar uma quantidade definida de passageiros do autocarro.
+    /**
+     * Lógica de segurança: se a quantidade pedida for maior do que os
+     * passageiros a bordo, desembarcam apenas os que existem — evita erros de
+     * índice inválido.
+     *
+     * Removemos sempre do fim do array com remove(size - 1) para manter a
+     * complexidade O(1) — não há deslocamento de elementos, ao contrário de uma
+     * remoção a meio que seria O(n).
+     *
+     * @param quantidade Número de passageiros que o utilizador quer desembarcar
+     * @return Número real de passageiros que desembarcaram
+     */
     // Verifica se o autocarro não está vazio antes de tentar desembarcar
-    public void desembarcarPassageiros(String nomeParagem) {
+    public int desembarcarPassageiros(int quantidade) {
         if (estaVazio()) {
-            System.out.println("Nenhum passageiro a bordo para desembarcar.");
-            return;
+            System.out.println("O autocarro está vazio! Nenhum passageiro para desembarcar.");
+            return 0;
         }
 
-        System.out.println("A verificar desembarque na paragem: " + nomeParagem);
-        // Percorre a lista em sentido inverso para garantir a integridade dos índices após a remoção
-        for (int i = passageirosNoAutocarro.size() - 1; i >= 0; i--) {
-            Passageiro p = passageirosNoAutocarro.get(i);
-
-            // Compara o destino do passageiro com o nome da paragem atual
-            if (p.getDestino().equalsIgnoreCase(nomeParagem)) {
-                passageirosNoAutocarro.remove(i);
-                System.out.println(p.getNome() + " desembarcou em " + nomeParagem + ".");
-            }
+        // Se pediu mais do que há a bordo, limita ao número real de passageiros
+        int aDesembarcar = Math.min(quantidade, passageirosNoAutocarro.size());
+        for (int i = 0; i < aDesembarcar; i++) {
+            // Removemos do fim do array
+            Passageiro passageiro = passageirosNoAutocarro.remove(passageirosNoAutocarro.size() - 1);
+            System.out.println(passageiro.getNome() + " desembarcou do autocarro.");
         }
+        return aDesembarcar; // Desvolve quantos desembarcaram de facto
     }
 
     @Override

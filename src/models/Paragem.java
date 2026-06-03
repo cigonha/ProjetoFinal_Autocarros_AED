@@ -8,12 +8,14 @@ public class Paragem {
     private String nome;
     private MyQueue filaPassageiros;
     private Paragem next; // Próxima paragem na linha (ponteiro da lista ligada)
+    private double distanciaProxima; // Distância (em km) até à próxima paragem da rota
 
     // Construtor
-    public Paragem(String nome) {
+    public Paragem(String nome, double distanciaProxima) {
         this.nome = nome;
         this.filaPassageiros = new MyQueue();
         this.next = null;
+        this.distanciaProxima = distanciaProxima;
     }
 
     // --- Getters e Setters ---
@@ -41,9 +43,16 @@ public class Paragem {
         this.next = next;
     }
 
+    public double getDistanciaProxima() {
+        return distanciaProxima;
+    }
+
+    public void setDistanciaProxima(double distanciaProxima) {
+        this.distanciaProxima = distanciaProxima;
+    }
 
     @Override
     public String toString() {
-        return "Paragem: " + nome + " [" + filaPassageiros.size() + " passageiro(s) em espera]";
+        return "Paragem: " + nome + " [" + filaPassageiros.size() + " passageiro(s) em espera] - Distância até à próxima: " + distanciaProxima + " km";
     }
 }
