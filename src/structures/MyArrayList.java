@@ -78,7 +78,7 @@ public class MyArrayList {
         StringBuilder sb = new StringBuilder();
         sb.append("=== Passageiros a Bordo ===\n");
         for (int i = 0; i < size; i++) {
-            sb.append("- ").append(data[i].getNome()).append("\n");
+            sb.append("- ").append(elementos[i].getNome()).append("\n");
         }
         sb.append("---------------------------\n");
         sb.append("Total: ").append(size).append(" passageiro(s) a bordo.");
