@@ -3,54 +3,40 @@ package structures;
 import models.Passageiro;
 
 public class MyArrayList {
-    // PERGUNTAR SE POSSO COLOCAR AQUI O FINAL ?????
-    private final Passageiro[] elementos; // Array interno para armazenar os passageiros
+    private Passageiro[] elementos; // Array interno para armazenar os passageiros
     private int size; // Número de passageiros atualmente na lista
-    private final int capacidade; // Limite máximo de elementos que o array pode armazenar
-
+    
     // Construtor
-    public MyArrayList(int capacidade) {
-        this.capacidade = capacidade;
-        this.elementos = new Passageiro[capacidade];
+    public MyArrayList(int capacidadeInicial) {
+        this.elementos = new Passageiro[capacidadeInicial];
         this.size = 0;
     }
 
-    // Verificar se a lista está cheia
-    public boolean isFull() {
-        return size == capacidade;
-    }
-
-    // Verificar se a lista está vazia
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    // Adicionar um passageiro ao fim da lista (se não estiver cheia)
-    public boolean add(Passageiro passageiro) {
-        if (isFull()) {
-            System.out.println("Autocarro cheio! Não é possível adicionar: " + passageiro.getNome());
-            return false;
-        }
-        if (passageiro == null) {
-            System.out.println("Erro: não é possivel adicionar um passageiro nulo à lista.");
-            return false;
+    // Adicionar um passageiro no fim da lista
+    public void add(Passageiro passageiro) {
+        if (isFull()){
+            resize();
         }
         elementos[size] = passageiro;
         size++;
-        return true;
     }
 
-    // Remover um passageiro numa posição específica da lista (verifica se o índice é válido)
-    public Passageiro remove(int indice) {
-        if (indice < 0 || indice >= size) {
-            System.out.println("Índice inválido! Não é possível remover passageiro na posição: " + indice);
-            return null;
+    // Aceder ao passageiro numa posição específica
+    public Passageiro get(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Índice inválido: " + index + ", Tamanho: " + size);
         }
+        return elementos[index];
+    }
 
-        Passageiro removido = elementos[indice];
-
-        // Deslocar todos os elementos seguintes uma posição para a esquerda
-        for (int i = indice; i < size - 1; i++) {
+    // Remover o passageiro na posição indicada (desloca elementos para a esquerda)
+    public Passageiro remove(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Índice inválido: " + index + ", Tamanho: " + size);
+        }
+        
+        Passageiro removido = elementos[index];
+        for (int i = index; i < size - 1; i++) {
             elementos[i] = elementos[i + 1];
         }
         elementos[size - 1] = null; // Limpar a última posição
@@ -59,39 +45,28 @@ public class MyArrayList {
         return removido;
     }
 
-    // Consultar um passageiro numa posição específica da lista (verifica se o índice é válido)
-    public Passageiro get(int indice) {
-        if (indice < 0 || indice >= size) {
-            System.out.println("Índice inválido! Não é possível consultar passageiro na posição: " + indice);
-            return null;
-        }
-        return elementos[indice];
-    }
-
-    // Consultar quantos passageiros estão na lista
+    // Devolve o número de passageiros atualmente na lista
     public int size() {
         return size;
+    }   
+
+    // Verificar se a lista está vazia
+    public boolean isEmpty() {
+        return size == 0;
     }
 
-    // Consultar a capacidade total da lista
-    public int getCapacidade() {
-        return capacidade;
+    // Verificar se o array interno está cheio
+    public boolean isFull() {
+        return size == elementos.length;
     }
 
-    // Imprime todos os passageiros na lista
-    public void printLista() {
-        if (isEmpty()) {
-            System.out.println("O autocarro está vazio!");
-            return;
-        }
-
-        System.out.println("=== Passageiros a Bordo ===");
+    // Duplica a capacidade do array interno quando este está cheio
+    private void resize() {
+        Passageiro[] novoArray = new Passageiro[elementos.length * 2];
         for (int i = 0; i < size; i++) {
-            System.out.println("- " + elementos[i].getNome());
+            novoArray[i] = elementos[i];
         }
-        System.out.println("---------------------------");
-        System.out.println("Total: " + size + " passageiro(s) a bordo.");
-        System.out.println("===========================");
+        elementos = novoArray;  
     }
 
     @Override
@@ -102,16 +77,13 @@ public class MyArrayList {
 
         StringBuilder sb = new StringBuilder();
         sb.append("=== Passageiros a Bordo ===\n");
-
         for (int i = 0; i < size; i++) {
-            sb.append("- ").append(elementos[i].getNome()).append("\n");
+            sb.append("- ").append(data[i].getNome()).append("\n");
         }
-
         sb.append("---------------------------\n");
-        sb.append("Total: ").append(size).append(" passageiro(s) a bordo.\n");
-        sb.append("===========================");
-
+        sb.append("Total: ").append(size).append(" passageiro(s) a bordo.");
+        
         return sb.toString();
-    }
+    }    
 
 }

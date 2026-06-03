@@ -2,28 +2,26 @@ package structures;
 
 import models.Passageiro;
 
+/**
+ * Estrutura de dados Fila (Queue) de Passageiros.
+ *
+ * Implementada como uma Fila Circular (Circular Queue). Previne o erro onde os
+ * índices crescem infinitamente. Possui método resize() para crescer
+ * dinamicamente, simulando uma fila de paragem real (sem limite fixo).
+ */
 public class MyQueue {
 
-    private static class Node {
-
-        Passageiro passageiro;
-        Node next;
-
-        Node(Passageiro passageiro) {
-            this.passageiro = passageiro;
-            this.next = null;
-        }
-    }
-
-    private Node front; // Início da fila - quem sai primeiro
-    private Node rear;  // Fim da fila - onde entram os novos
-    private int size;   // Tamanho da fila
+    private Passageiro[] elementos;
+    private int front; // Índice do início da fila - quem sai primeiro
+    private int rear;  // Índice do fim da fila - onde entram os novos
+    private int size;   // Número de passageiros atualmente na fila
 
     // Construtor
-    public MyQueue() {
-        front = null;
-        rear = null;
-        size = 0;
+    public MyQueue(int capacidadeInicial) {
+        this.elementos = new Passageiro[capacidadeInicial];
+        this.front = 0;
+        this.rear = 0;
+        this.size = 0;
     }
 
     // Verificar se a fila está vazia
@@ -31,73 +29,61 @@ public class MyQueue {
         return size == 0;
     }
 
-    // Adicionar um passageiro à fila (vai entrar no final (rear))
-    public void enqueue(Passageiro passageiro) {
-        if (passageiro == null) {
-            System.out.println("Erro: não é possivel adicionar um passageiro nulo à fila.");
-            return;
-        }
-
-        Node newNode = new Node(passageiro);
-        if (rear == null) {
-            // Se a fila estiver vazia, o front e rear apontam ambos para o único nó
-            front = newNode;
-            rear = newNode;
-        } else {
-            rear.next = newNode;
-            rear = newNode;
-        }
-        size++;
+    // Verificar se a fila está cheia
+    public boolean isFull() {
+        return size == elementos.length;
     }
 
-    // Remover um passageiro da fila (quem está no início (front))
-    public Passageiro dequeue() {
-        if (isEmpty()) {
-            System.out.println("Aviso: A fila está vazia. Não há passageiro para remover.");
-            return null;
-        }
-
-        Passageiro p = front.passageiro;
-        front = front.next;
-
-        if (front == null) {
-            // A fila ficou vazia após a remoção, então rear também deve ser null
-            rear = null;
-        }
-        size--;
-        return p; // Retorna o passageiro removido
-    }
-
-    // Consultar o passageiro no início da fila sem o remover
-    public Passageiro peek() {
-        if (isEmpty()) {
-            return null;
-        }
-        return front.passageiro;
-    }
-
-    // Consultar quantos passageiros estão na fila
+    // Devolve o número atual de passageiros na fila
     public int size() {
         return size;
     }
 
-    // Imprime todos os passageiros na fila
-    public void printFila() {
-        if (isEmpty()) {
-            System.out.println("A fila está vazia.");
+    // Adiciona um passageiro no fim da fila (rear)
+    public void enqueue (Passageiro passageiro) {
+        if (passageiro == null) {
+            System.out.println("Erro: não é possível adicionar um passageiro nulo à fila.");
             return;
         }
-
-        Node current = front;
-        System.out.print("Fila: ");
-        while (current != null) {
-            System.out.print(current.passageiro.getNome() + ", ");
-            if (current.next != null) {
-                System.out.print("-> ");
-            }
-            current = current.next;
+        if (isFull()) {
+            resize();
         }
-        System.out.println("[Fim da fila]");
+        elementos[rear] = passageiro;
+        rear = (rear + 1) % elementos.length;
+        size++;
+    }
+
+    // Remove e devolve o passageiro que está na frente da fila (front)
+    public Passageiro dequeue() {
+        if (isEmpty()) {
+            System.out.println("Fila vazia! Não há passageiros para remover.");
+            return null;
+        }
+        Passageiro removido = elementos[front];
+        elementos[front] = null;
+        front = (front + 1) % elementos.length;
+        size--;
+
+        return removido;
+    }
+
+    // Consulta quem é o próximo a sair, sem o remover
+    public Passageiro peek() {
+        if (isEmpty()) {
+            return null;
+        }
+        return elementos[front];
+    }
+
+    // Método para aumentar a capacidade da fila caso o array encha, "desenrolando" a fila circular
+    private void resize() {
+        Passageiro[] novoArray = new Passageiro[elementos.length * 2];
+        for (int i = 0; i < size; i++) {
+            novoArray[i] = elementos[(front + i) % elementos.length];
+        }
+        elementos = novoArray;
+        front = 0;
+        rear = size;
     }
 
     @Override
@@ -105,15 +91,13 @@ public class MyQueue {
         if (isEmpty()) {
             return "Fila vazia.";
         }
-
+        
         StringBuilder sb = new StringBuilder("Fila: ");
-        Node current = front;
-        while (current != null) {
-            sb.append(current.passageiro.getNome());
-            if (current.next != null) {
+        for (int i = 0; i < size; i++) {
+            sb.append(elementos[(front + i) % elementos.length].getNome());
+            if (i < size - 1) {
                 sb.append(" -> ");
             }
-            current = current.next;
         }
         return sb.toString();
     }
