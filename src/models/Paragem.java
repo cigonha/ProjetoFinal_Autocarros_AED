@@ -13,7 +13,7 @@ public class Paragem {
     // Construtor
     public Paragem(String nome, double distanciaProxima) {
         this.nome = nome;
-        this.filaPassageiros = new MyQueue();
+        this.filaPassageiros = new MyQueue(10);
         this.next = null;
         this.distanciaProxima = distanciaProxima;
     }

@@ -24,7 +24,7 @@ public class Autocarro {
 
     // Método para verificar se o autocarro está cheio
     public boolean estaCheio() {
-        return passageirosNoAutocarro.isFull();
+        return passageirosNoAutocarro.size() == capacidadeMaxima;
     }
 
     // Método para verificar se o autocarro está vazio
