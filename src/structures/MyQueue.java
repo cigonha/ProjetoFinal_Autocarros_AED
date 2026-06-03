@@ -42,7 +42,7 @@ public class MyQueue {
     // Adiciona um passageiro no fim da fila (rear)
     public void enqueue (Passageiro passageiro) {
         if (passageiro == null) {
-            System.out.println("Erro: não é possível adicionar um passageiro nulo à fila.");
+            System.out.println("Erro: nao é possível adicionar um passageiro nulo à fila.");
             return;
         }
         if (isFull()) {
@@ -56,7 +56,7 @@ public class MyQueue {
     // Remove e devolve o passageiro que está na frente da fila (front)
     public Passageiro dequeue() {
         if (isEmpty()) {
-            System.out.println("Fila vazia! Não há passageiros para remover.");
+            System.out.println("Fila vazia! Nao há passageiros para remover.");
             return null;
         }
         Passageiro removido = elementos[front];

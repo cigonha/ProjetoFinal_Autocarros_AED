@@ -57,7 +57,7 @@ public class MyLinkedList {
      */
     public boolean removerParagem(String nome) {
         if (head == null) {
-            System.out.println("Linha vazia! Não há paragens para remover.");
+            System.out.println("Linha vazia! Nao há paragens para remover.");
             return false;
         }
 
@@ -83,7 +83,7 @@ public class MyLinkedList {
             return true;
         }
 
-        System.out.println("Paragem '" + nome + "' não encontrada na linha.");
+        System.out.println("Paragem '" + nome + "' nao encontrada na linha.");
         return false;
     }
 
@@ -130,7 +130,7 @@ public class MyLinkedList {
         // 1. Encontrar o ponto de partida
         Paragem current = buscarParagem(origem);
         if (current == null) {
-            System.out.println("Erro: Paragem de origem '" + origem + "' não existe.");
+            System.out.println("Erro: Paragem de origem '" + origem + "' nao existe.");
             return -1;
         }
 
@@ -154,7 +154,7 @@ public class MyLinkedList {
         }
 
         if (!encontrouDestino) {
-            System.out.println("\nErro: O destino [" + destino + "] não é alcançável a partir de [" + origem + "] nesta rota.");
+            System.out.println("\nErro: O destino [" + destino + "] nao é alcançável a partir de [" + origem + "] nesta rota.");
             return -1;
         }
 

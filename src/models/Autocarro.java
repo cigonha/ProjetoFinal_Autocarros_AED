@@ -42,7 +42,7 @@ public class Autocarro {
      */
     public boolean embarcarPassageiro(Passageiro passageiro) {
         if (estaCheio()) {
-            System.out.println("Autocarro cheio! " + passageiro.getNome() + " não pode embarcar.");
+            System.out.println("Autocarro cheio! " + passageiro.getNome() + " nao pode embarcar.");
             return false;
         }
 

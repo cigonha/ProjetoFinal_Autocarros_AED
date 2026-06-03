@@ -53,6 +53,6 @@ public class Paragem {
 
     @Override
     public String toString() {
-        return "Paragem: " + nome + " [" + filaPassageiros.size() + " passageiro(s) em espera] - Distância até à próxima: " + distanciaProxima + " km";
+        return "Paragem: " + nome + " [" + filaPassageiros.size() + " passageiro(s) em espera] - Distancia até à próxima: " + distanciaProxima + " km";
     }
 }

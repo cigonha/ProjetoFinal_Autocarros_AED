@@ -80,7 +80,7 @@ public class ParagemSorter {
         System.out.println("\n=== Estatísticas: Paragens Ordenadas por " + criterio + " ===");
         
         if (vetor.length == 0) {
-            System.out.println("Não existem paragens na linha.");
+            System.out.println("Nao existem paragens na linha.");
             return;
         }
 
