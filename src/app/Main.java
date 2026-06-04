@@ -2,6 +2,9 @@ package app;
 
 import java.util.Scanner;
 import models.Autocarro;
+import models.Paragem;
+import models.Passageiro;
+import sorting.ParagemSorter;
 import structures.MyLinkedList;
 
 public class Main {
@@ -67,19 +70,19 @@ public class Main {
                 gerirParagens();
                 break;
             case 3:
-                System.out.println("Em construcao (Parte 3)...");
+                adicionarPassageiros();
                 break;
             case 4:
-                System.out.println("Em construcao (Parte 4)...");
+                simularParagem();
                 break;
             case 5:
-                System.out.println("Em construcao (Parte 5)...");
+                ordenarParagens();
                 break;
             case 6:
-                System.out.println("Em construcao (Parte 5)...");
+                mostrarEstadoGlobal();
                 break;
             case 7:
-                System.out.println("Em construcao (Parte 5)...");
+                calcularDistancia();
                 break;
             case 0:
                 System.out.println("\n[x] A encerrar o sistema. Boa viagem!");
@@ -163,6 +166,191 @@ public class Main {
                 
             default:
                 System.out.println("[!] Opcao invalida.");
+        }
+    }
+
+    private static void adicionarPassageiros() {
+        System.out.println("\n--- [ADICIONAR PASSAGEIROS A FILA] ---");
+        if (linha.size() == 0) {
+            System.out.println("[!] A linha nao tem paragens. Adicione paragens primeiro (Opcao 2).");
+            return;
+        }
+
+        System.out.print("Nome da paragem onde chegaram os passageiros: ");
+        String nomeParagem = scanner.nextLine();
+        Paragem paragem = linha.buscarParagem(nomeParagem);
+
+        if (paragem == null) {
+            System.out.println("[!] Erro: Paragem '" + nomeParagem + "' nao encontrada.");
+            return;
+        }
+
+        System.out.print("Quantos passageiros chegaram a paragem? ");
+        int quantidade = 0;
+        if (scanner.hasNextInt()) {
+            quantidade = scanner.nextInt();
+            scanner.nextLine();
+        } else {
+            System.out.println("[!] Erro: Por favor insira um numero valido.");
+            scanner.nextLine();
+            return;
+        }
+
+        // Arrays com nomes para gerar passageiros aleatórios
+        String[] nomesProprios = {"Ana", "Joao", "Maria", "Pedro", "Catarina", "Tiago", "Beatriz", "Diogo", "Ines", "Rui", "Sofia", "Miguel", "Joana", "Carlos"};
+        String[] apelidos = {"Silva", "Santos", "Ferreira", "Pereira", "Oliveira", "Costa", "Rodrigues", "Martins", "Gomes", "Sousa"};
+
+        System.out.println("\n[Passageiros a entrar na fila:]");
+        for (int i = 0; i < quantidade; i++) {
+            // Escolhe um nome próprio e um apelido à sorte
+            String nomeAleatorio = nomesProprios[(int) (Math.random() * nomesProprios.length)] 
+                                 + " " + 
+                                 apelidos[(int) (Math.random() * apelidos.length)];
+            
+            Passageiro p = new Passageiro(nomeAleatorio);
+            paragem.getFilaPassageiros().enqueue(p);
+            
+            // Imprime logo o nome de quem acabou de chegar!
+            System.out.println("  -> " + nomeAleatorio);
+        }
+        
+        System.out.println("\n[OK] " + quantidade + " passageiros entraram na fila da paragem '" + paragem.getNome() + "'.");
+    }
+
+   private static void simularParagem() {
+        System.out.println("\n--- [SIMULAR CHEGADA DO AUTOCARRO] ---");
+        if (linha.size() == 0) {
+            System.out.println("[!] A linha nao tem paragens.");
+            return;
+        }
+
+        System.out.print("Em que paragem esta o autocarro agora? ");
+        String nomeParagem = scanner.nextLine();
+        Paragem paragem = linha.buscarParagem(nomeParagem);
+
+        if (paragem == null) {
+            System.out.println("[!] Erro: Paragem '" + nomeParagem + "' nao encontrada.");
+            return;
+        }
+
+        System.out.println("\n[AUTOCARRO CHEGOU A '" + paragem.getNome().toUpperCase() + "']");
+        System.out.println("Ocupacao atual: " + autocarro.getPassageirosNoAutocarro().size() + "/" + autocarro.getCapacidadeMaxima());
+
+        // 1. LÓGICA DE DESEMBARQUE
+        System.out.print("Quantos passageiros pretendem SAIR nesta paragem? ");
+        int aSair = 0;
+        if (scanner.hasNextInt()) {
+            aSair = scanner.nextInt();
+            scanner.nextLine();
+        } else {
+            scanner.nextLine();
+        }
+
+        if (aSair > 0) {
+            int sairamDeFato = autocarro.desembarcarPassageiros(aSair);
+            System.out.println("[->] " + sairamDeFato + " passageiros sairam do autocarro.");
+        }
+
+        // 2. LÓGICA DE EMBARQUE
+        int pessoasNaFila = paragem.getFilaPassageiros().size();
+        System.out.println("\nA iniciar embarque (pessoas em espera na fila: " + pessoasNaFila + ")...");
+        
+        // --- MOSTRAR FILA ANTES ---
+        if (pessoasNaFila > 0) {
+            System.out.println("[ANTES] " + paragem.getFilaPassageiros().toString());
+            System.out.println("--------------------------------------------------");
+        }
+
+        int embarcados = 0;
+
+        // Enquanto o autocarro NÃO estiver cheio E a fila NÃO estiver vazia
+        while (!autocarro.estaCheio() && !paragem.getFilaPassageiros().isEmpty()) {
+            Passageiro p = paragem.getFilaPassageiros().dequeue();
+            autocarro.embarcarPassageiro(p); // Nota: O Autocarro.java já faz o print de quem entrou
+            embarcados++;
+        }
+
+        System.out.println("--------------------------------------------------");
+
+        if (autocarro.estaCheio() && !paragem.getFilaPassageiros().isEmpty()) {
+            System.out.println("[!] O autocarro encheu! Ficaram " + paragem.getFilaPassageiros().size() + " pessoas na paragem para o proximo.");
+        }
+
+        System.out.println("[<-] Embarcaram " + embarcados + " passageiros.");
+        
+        // --- MOSTRAR FILA DEPOIS ---
+        System.out.println("[DEPOIS] " + paragem.getFilaPassageiros().toString());
+        
+        System.out.println("Ocupacao atualizada do autocarro: " + autocarro.getPassageirosNoAutocarro().size() + "/" + autocarro.getCapacidadeMaxima());
+    }
+
+    private static void ordenarParagens() {
+        System.out.println("\n--- [ORDENAR PARAGENS (ESTATISTICAS)] ---");
+        if (linha.size() == 0) {
+            System.out.println("[!] A linha nao tem paragens.");
+            return;
+        }
+
+        Paragem[] arrayParagens = ParagemSorter.converterParaArray(linha);
+
+        System.out.println("1. Por Nome (Bubble Sort - Ordem Alfabetica)");
+        System.out.println("2. Por Volume de Passageiros na fila (Selection Sort - Ordem Decrescente)");
+        System.out.print("[>] Escolha o criterio: ");
+
+        int opcaoOrd = 0;
+        if (scanner.hasNextInt()) {
+            opcaoOrd = scanner.nextInt();
+            scanner.nextLine();
+        } else {
+            System.out.println("[!] Opcao invalida.");
+            scanner.nextLine();
+            return;
+        }
+
+        if (opcaoOrd == 1) {
+            ParagemSorter.bubbleSortPorNome(arrayParagens);
+            ParagemSorter.imprimirOrdenacao(arrayParagens, "Nome (Ordem Alfabetica)");
+        } else if (opcaoOrd == 2) {
+            ParagemSorter.selectionSortPorPassageiros(arrayParagens);
+            ParagemSorter.imprimirOrdenacao(arrayParagens, "Volume de Passageiros na Fila");
+        } else {
+            System.out.println("[!] Opcao invalida.");
+        }
+    }
+
+    private static void mostrarEstadoGlobal() {
+        System.out.println("\n--- [ESTADO ATUAL DO SISTEMA] ---");
+        System.out.println(autocarro.toString());
+
+        if (linha.size() > 0) {
+            linha.imprimirLinha();
+            System.out.println("\n[Detalhe das Filas nas Paragens]:");
+            Paragem current = linha.getHead();
+            while (current != null) {
+                System.out.println("- " + current.getNome() + ": " + current.getFilaPassageiros().size() + " pessoa(s) na fila.");
+                current = current.getNext();
+            }
+        } else {
+            System.out.println("A linha ainda nao tem paragens.");
+        }
+    }
+
+    private static void calcularDistancia() {
+        System.out.println("\n--- [CALCULAR PERCURSO] ---");
+        if (linha.size() < 2) {
+            System.out.println("[!] A linha precisa de pelo menos 2 paragens para calcular distancias.");
+            return;
+        }
+
+        System.out.print("Paragem de Origem: ");
+        String origem = scanner.nextLine();
+
+        System.out.print("Paragem de Destino: ");
+        String destino = scanner.nextLine();
+
+        double dist = linha.calcularPercurso(origem, destino);
+        if (dist >= 0) {
+            System.out.println("\n[OK] Distancia total de viagem: " + dist + " km");
         }
     }
 
