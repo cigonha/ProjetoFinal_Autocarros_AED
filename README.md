@@ -26,7 +26,7 @@ ProjetoFinal_Autocarros_AED/
 └── src/
     ├── app/            # Ponto de entrada da aplicação (Main.java e menu interativo)
     ├── models/         # Classes do domínio (Autocarro, Paragem, Passageiro)
-    ├── sorting/        # Algoritmos de ordenação (BubbleSort, SelectionSort)
+    ├── sorting/        # Algoritmos de ordenação (ParagemSorter)
     └── structures/     # Estruturas de dados manuais (MyLinkedList, MyQueue, MyArrayList)
 ```
 
@@ -72,15 +72,14 @@ Ambos os algoritmos têm complexidade **O(n²)** no pior caso, o que é aceitáv
 
 O sistema disponibiliza um **menu interativo em consola** com as seguintes opções:
 
-- **Criar linha** — Inicializar uma nova linha de autocarros com nome e capacidade do autocarro definidos pelo utilizador.
-- **Adicionar paragem** — Inserir uma nova paragem na linha, especificando o nome e a distância à paragem anterior.
-- **Embarcar passageiros** — Definir via consola quantas pessoas entram na paragem atual; o autocarro embarca passageiros da fila até atingir a lotação máxima.
-- **Desembarcar passageiros** — Definir via consola quantas pessoas saem na paragem atual.
-- **Listar estado da linha** — Apresentar todas as paragens da rota, com o número de passageiros em fila de espera e a ocupação atual do autocarro.
-- **Calcular distância entre paragens** — Percorrer a lista ligada e somar as distâncias entre duas paragens indicadas pelo utilizador.
-- **Ordenar paragens** — Ordenar e listar as paragens por nome (Bubble Sort) ou por lotação (Selection Sort).
-- **Sair** — Terminar a aplicação.
-
+- **1. Criar linha de autocarro** — Inicializa o sistema, permitindo definir a capacidade máxima (lotação física) do autocarro que fará o percurso.
+- **2. Adicionar/Remover paragens** — Gere a rota (Lista Ligada). Permite inserir uma nova paragem no final da linha (especificando o nome e a distância até à *próxima* paragem) ou remover uma paragem existente, ajustando os ponteiros automaticamente.
+- **3. Adicionar passageiros a uma paragem** — Permite inserir passageiros na fila de espera (Fila Circular / Queue) de uma paragem específica através do seu nome.
+- **4. Simular chegada do autocarro (Embarque/Desembarque)** — Lógica central do sistema. O utilizador define quantos passageiros pretendem sair do autocarro e, de seguida, o sistema processa automaticamente o embarque (FIFO) dos passageiros que estão na fila de espera dessa paragem, respeitando sempre a lotação máxima do veículo.
+- **5. Ordenar paragens (Estatísticas)** — Permite ordenar e visualizar o estado das paragens utilizando dois critérios: ordem alfabética do nome (via *Bubble Sort*) ou por volume de passageiros na fila em ordem decrescente (via *Selection Sort*).
+- **6. Mostrar estado atual da linha** — Imprime graficamente a rota completa, ilustrando os nós da lista, as distâncias entre eles, o tamanho atual das filas de espera e a ocupação em tempo real do autocarro (ArrayList).
+- **7. Calcular percurso entre paragens** — Funcionalidade de navegação que percorre a lista ligada de forma sequencial ($O(n)$) e calcula a distância total acumulada entre uma paragem de origem e uma paragem de destino indicadas pelo utilizador.
+- **0. Sair** — Termina a execução do programa com segurança.
 ---
 
 ## 🛠️ Como Executar
