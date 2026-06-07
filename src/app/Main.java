@@ -19,7 +19,8 @@ public class Main {
         int opcao = -1;
 
         desenharAutocarro();
-        System.out.println("   === BEM-VINDO AO SISTEMA DE GESTAO DE TRANSPORTES ===\n");
+        System.out.println("   === BEM-VINDO AO SISTEMA DE GESTAO DE LINHA DE AUTOCARROS ===");
+        System.out.println("                  === AutocarrO(n) Express ===\n");
 
         do {
             mostrarMenu();
