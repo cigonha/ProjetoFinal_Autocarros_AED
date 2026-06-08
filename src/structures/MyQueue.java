@@ -46,9 +46,10 @@ public class MyQueue {
             return;
         }
         if (isFull()) {
-            resize();
+            resize(); // Redimensiona e "desenrola" a fila se estiver fisicamente cheia
         }
         elementos[rear] = passageiro;
+        // O operador % garante que o rear volta a 0 se atingir o limite do array
         rear = (rear + 1) % elementos.length;
         size++;
     }
